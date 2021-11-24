@@ -1,1 +1,1 @@
-worker: python cloudmqtt_subscribe.py 
+web: python cloudmqtt_subscribe.py 
