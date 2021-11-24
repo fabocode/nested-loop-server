@@ -1,1 +1,1 @@
-web: python subscribe.py 
+worker: python subscribe.py 
