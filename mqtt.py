@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-import os
+import os, json
 from urllib.parse import urlparse
 
 count_publish = 0 
@@ -11,7 +11,18 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, obj, msg):
     global count_publish
     count_publish += 1
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
+    # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
+    topic=msg.topic
+    m_decode=str(msg.payload.decode("utf-8","ignore"))
+    print("Received message type: " + type(m_decode))
+    print("Received message: " + m_decode)
+    print("converting from json to object")
+    m_in = json.loads(m_decode)
+    print(type(m_in))
+    print(m_in)
+    print("")
+
+
 
 def on_publish(client, obj, mid):
     print(f"published: {count_publish}")
@@ -51,8 +62,4 @@ mqttc.subscribe(topic_credit_purchased, 0)
 # mqttc.publish(topic, "my message")
 
 # Continue the network loop, exit when an error occurs
-# rc = 0
-# while rc == 0:
-#     rc = mqttc.loop()
 mqttc.loop_forever()
-print("rc: " + str(rc))
