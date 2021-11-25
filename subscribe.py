@@ -39,7 +39,6 @@ url = urlparse(url_str)
 topic = url.path[1:] or 'test'
 
 # Connect
-print(f"url {url} - topic: {topic}")
 mqttc.username_pw_set(url.username, url.password)
 mqttc.connect(url.hostname, url.port)
 

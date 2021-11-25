@@ -41,6 +41,10 @@ topic = url.path[1:] or 'test'
 
 # Connect
 print(f"url {url} - topic: {topic}")
+print(f"username: {url.username} - password: {url.password}")
+print(f"hostname: {url.hostname} - port: {url.port}")
+print(f"path: {url.path}")
+print("")
 mqttc.username_pw_set(url.username, url.password)
 mqttc.connect(url.hostname, url.port)
 
@@ -48,7 +52,7 @@ mqttc.connect(url.hostname, url.port)
 # mqttc.subscribe(topic, 0)
 
 # Publish a message
-mqttc.publish(topic, "my message")
+mqttc.publish(topic, "my message from pc")
 
 # Continue the network loop, exit when an error occurs
 rc = 0
@@ -56,8 +60,8 @@ rc = 0
     # rc = mqttc.loop()
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
-    mqttc.publish(topic, "my message")
-    time.sleep(5)
+    mqttc.publish(topic, "my message from pc")
+    time.sleep(10)
     print(f"rc: {rc}")
     if rc != 0:
         break
