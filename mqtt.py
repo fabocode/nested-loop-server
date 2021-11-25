@@ -1,73 +1,37 @@
-#!C:/python36/python.exe
-#!/usr/bin/env python3
-##demo code provided by Steve Cope at www.steves-internet-guide.com
-##email steve@steves-internet-guide.com
-##Free to use for any purpose
-##If you like and use this code you can
-##buy me a drink here https://www.paypal.me/StepenCope
-
 import paho.mqtt.client as mqtt
-from paho.mqtt.properties import Properties
-from paho.mqtt.packettypes import PacketTypes 
-import time,logging,sys, os
+import os
 from urllib.parse import urlparse
 
-client_id="testclient2"
-mqttv=mqtt.MQTTv5
-messages=[]
-host = '192.168.1.41'
-port=1883
-pub_topic="test"
+count_publish = 0 
 
-def on_publish(client, userdata, mid):
-    print("published")
+# Define event callbacks
+def on_connect(client, userdata, flags, rc):
+    print("rc: " + str(rc))
 
-def on_connect(client, userdata, flags, reasonCode,properties=None):
-    print('Connected ',flags)
-    print('Connected properties',properties)
-    print('Connected ',reasonCode)
+def on_message(client, obj, msg):
+    global count_publish
+    count_publish += 1
+    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
 
+def on_publish(client, obj, mid):
+    print(f"published: {count_publish}")
 
+def on_subscribe(client, obj, mid, granted_qos):
+    global count_publish
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
-def on_message(client, userdata, message):
+def on_log(client, obj, level, string):
+    print(string)
 
-    msg=str(message.payload.decode("utf-8"))
-    messages.append(msg)
-    print('RECV Topic = ',message.topic)
-    print('RECV MSG =', msg)
-    response_topic = message.properties.ResponseTopic
-    properties=Properties(PacketTypes.PUBLISH)
-    properties.CorrelationData=message.properties.CorrelationData
-    print('Responding on response topic:', properties)
-    #respond
-    
-    client.publish(response_topic,"server response message",properties=properties)
+mqttc = mqtt.Client()
+# Assign event callbacks
+mqttc.on_message = on_message
+mqttc.on_connect = on_connect
+mqttc.on_publish = on_publish
+mqttc.on_subscribe = on_subscribe
 
-
-# def on_disconnect(client, userdata, rc):
-#     print('Received Disconnect ',rc)
-
-def on_subscribe(client, userdata, mid, granted_qos,properties=None):
-    print('SUBSCRIBED')
-
-def on_unsubscribe(client, userdata, mid, properties, reasonCodes):
-    print('UNSUBSCRIBED') 
-    
-
-
-
-print("creating client")
-
-client = mqtt.Client("server",protocol=mqttv)
-
-
-client.on_connect = on_connect
-client.on_message = on_message
-# client.on_disconnect = on_disconnect
-client.on_subscribe = on_subscribe
-client.on_publish = on_publish
-
-properties=None
+# Uncomment to enable debug messages
+# mqttc.on_log = on_log
 
 # Parse CLOUDMQTT_URL (or fallback to localhost)
 url_str = os.environ.get('CLOUDMQTT_URL', 'mqtt://localhost:18577')
@@ -75,21 +39,19 @@ url = urlparse(url_str)
 topic = url.path[1:] or 'test'
 
 # Connect
-client.username_pw_set(url.username, url.password)
-client.connect(url.hostname,url.port,properties=properties)
-
-time.sleep(5)
-client.subscribe('org/common')
-time.sleep(2)
-
-print("Publish response topic")
-msg_out1="test message from client 1"
-properties=Properties(PacketTypes.PUBLISH)
-properties.ResponseTopic='org/responses/server'
-#client.publish('org/common',"test Message",properties=properties)
-
-client.loop_forever()
+mqttc.username_pw_set(url.username, url.password)
+mqttc.connect(url.hostname, url.port)
 
 
+topic_credit_purchased = "credit_purchased"
+# Start subscribe, with QoS level 0
+mqttc.subscribe(topic_credit_purchased, 0)
 
+# Publish a message
+# mqttc.publish(topic, "my message")
 
+# Continue the network loop, exit when an error occurs
+rc = 0
+while rc == 0:
+    rc = mqttc.loop()
+print("rc: " + str(rc))
