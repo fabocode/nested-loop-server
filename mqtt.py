@@ -18,7 +18,7 @@ def on_message(client, obj, msg):
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
     topic=msg.topic
     if topic == credit_purchased:
-        "send an ack?"
+        print("send an ack?")
     m_decode=str(msg.payload.decode("utf-8","ignore"))
     m_in = json.loads(m_decode)
     print(m_in, topic)
