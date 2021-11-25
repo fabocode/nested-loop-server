@@ -15,13 +15,13 @@ def on_connect(client, userdata, flags, rc):
     print("rc: " + str(rc))
 
 def on_message(client, obj, msg):
-    # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
     topic=msg.topic
     if topic == credit_purchased_hev_rx:
-        print("send an ack?")
-    m_decode=str(msg.payload.decode("utf-8","ignore"))
-    m_in = json.loads(m_decode)
-    print(m_in, topic)
+        print("credit purchased OK!")
+    # m_decode=str(msg.payload.decode("utf-8","ignore"))
+    # m_in = json.loads(m_decode)
+    # print(m_in, topic)
+    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
