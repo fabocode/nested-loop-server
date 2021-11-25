@@ -51,7 +51,8 @@ mqttc.subscribe(topic_credit_purchased, 0)
 # mqttc.publish(topic, "my message")
 
 # Continue the network loop, exit when an error occurs
-rc = 0
-while rc == 0:
-    rc = mqttc.loop()
+# rc = 0
+# while rc == 0:
+#     rc = mqttc.loop()
+mqttc.loop_forever()
 print("rc: " + str(rc))
