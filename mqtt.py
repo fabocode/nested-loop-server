@@ -53,7 +53,8 @@ mqttc.connect(url.hostname, url.port)
 
 
 # Start subscribe, with QoS level 0
-mqttc.subscribe(credit_purchased_res, 0)
+# mqttc.subscribe(credit_purchased, 0)
+mqttc.subscribe(credit_purchased, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
