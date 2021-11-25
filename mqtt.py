@@ -14,7 +14,7 @@ def on_message(client, obj, msg):
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
     topic=msg.topic
     m_decode=str(msg.payload.decode("utf-8","ignore"))
-    print("Received message type: " + type(m_decode))
+    print(f"Received message type: {type(m_decode)}")
     print("Received message: " + m_decode)
     print("converting from json to object")
     m_in = json.loads(m_decode)
