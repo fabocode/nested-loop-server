@@ -2,12 +2,12 @@ import paho.mqtt.client as mqtt
 import os, json, time 
 from urllib.parse import urlparse
 
-credit_purchased = "credit_purchased"
-credit_purchased_data = {
+credit_purchased_server_tx = "credit_purchased_srvr_tx"
+credit_purchased_data_tx = {
     "msg_code": 0x64,
     "data": 40320
 }
-credit_purchased_res = "credit_purchased_res"
+credit_purchased_hev_rx = "credit_purchased_hev_rx"
 
 
 # Define event callbacks
@@ -17,7 +17,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, obj, msg):
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
     topic=msg.topic
-    if topic == credit_purchased:
+    if topic == credit_purchased_hev_rx:
         print("send an ack?")
     m_decode=str(msg.payload.decode("utf-8","ignore"))
     m_in = json.loads(m_decode)
@@ -54,7 +54,7 @@ mqttc.connect(url.hostname, url.port)
 
 # Start subscribe, with QoS level 0
 # mqttc.subscribe(credit_purchased, 0)
-mqttc.subscribe(credit_purchased, 0)
+mqttc.subscribe(credit_purchased_hev_rx, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
@@ -66,7 +66,7 @@ rc = 0
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
     # mqttc.publish(topic_serial_number, json.dumps(serial_data))
-    mqttc.publish(credit_purchased, json.dumps(credit_purchased_data))
+    mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))
     time.sleep(10)
     print(f"rc: {rc}")
     if rc != 0:
