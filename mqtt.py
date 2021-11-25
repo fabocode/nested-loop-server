@@ -76,7 +76,7 @@ topic = url.path[1:] or 'test'
 
 # Connect
 client.username_pw_set(url.username, url.password)
-client.connect(host,port,properties=properties)
+client.connect(url.hostname,url.port,properties=properties)
 
 time.sleep(5)
 client.subscribe('org/common')
