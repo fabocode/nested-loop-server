@@ -21,7 +21,7 @@ def on_message(client, obj, msg):
     # m_decode=str(msg.payload.decode("utf-8","ignore"))
     # m_in = json.loads(m_decode)
     # print(m_in, topic)
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
+    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
