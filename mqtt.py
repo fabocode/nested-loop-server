@@ -54,9 +54,9 @@ mqttc.username_pw_set(url.username, url.password)
 mqttc.connect(url.hostname, url.port)
 
 
-topic_credit_purchased = "credit_purchased"
+topic_serial_number = "serial_number"
 # Start subscribe, with QoS level 0
-mqttc.subscribe(topic_credit_purchased, 0)
+mqttc.subscribe(topic_serial_number, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
