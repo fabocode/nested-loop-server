@@ -1,34 +1,32 @@
 import paho.mqtt.client as mqtt
-import os, json
+import os, json, time 
 from urllib.parse import urlparse
 
-count_publish = 0 
+credit_purchased = "credit_purchased"
+credit_purchased_data = {
+    "msg_code": 0x64,
+    "data": 40320
+}
+credit_purchased_res = "credit_purchased_res"
+
 
 # Define event callbacks
 def on_connect(client, userdata, flags, rc):
     print("rc: " + str(rc))
 
 def on_message(client, obj, msg):
-    global count_publish
-    count_publish += 1
     # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload) + " count_publish: " + str(count_publish))
     topic=msg.topic
+    if topic == credit_purchased:
+        "send an ack?"
     m_decode=str(msg.payload.decode("utf-8","ignore"))
-    print(f"Received message type: {type(m_decode)}")
-    print("Received message: " + m_decode)
-    print("converting from json to object")
     m_in = json.loads(m_decode)
-    print(type(m_in))
-    print(m_in)
-    print("")
-
-
+    print(m_in, topic)
 
 def on_publish(client, obj, mid):
-    print(f"published: {count_publish}")
+    print(f"published: {mid}")
 
 def on_subscribe(client, obj, mid, granted_qos):
-    global count_publish
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 def on_log(client, obj, level, string):
@@ -54,12 +52,22 @@ mqttc.username_pw_set(url.username, url.password)
 mqttc.connect(url.hostname, url.port)
 
 
-topic_serial_number = "serial_number"
 # Start subscribe, with QoS level 0
-mqttc.subscribe(topic_serial_number, 0)
+mqttc.subscribe(credit_purchased_res, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
 
 # Continue the network loop, exit when an error occurs
-mqttc.loop_forever()
+rc = 0
+# while rc == 0:
+    # rc = mqttc.loop()
+while True:
+    rc = mqttc.loop()   # keep network traffic flow with the broker
+    # mqttc.publish(topic_serial_number, json.dumps(serial_data))
+    mqttc.publish(credit_purchased, json.dumps(credit_purchased_data))
+    time.sleep(10)
+    print(f"rc: {rc}")
+    if rc != 0:
+        break
+print("rc end: " + str(rc))
