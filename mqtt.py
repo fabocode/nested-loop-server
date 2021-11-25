@@ -44,8 +44,8 @@ def on_message(client, userdata, message):
     client.publish(response_topic,"server response message",properties=properties)
 
 
-def on_disconnect(client, userdata, rc):
-    print('Received Disconnect ',rc)
+# def on_disconnect(client, userdata, rc):
+#     print('Received Disconnect ',rc)
 
 def on_subscribe(client, userdata, mid, granted_qos,properties=None):
     print('SUBSCRIBED')
@@ -63,7 +63,7 @@ client = mqtt.Client("server",protocol=mqttv)
 
 client.on_connect = on_connect
 client.on_message = on_message
-client.on_disconnect = on_disconnect
+# client.on_disconnect = on_disconnect
 client.on_subscribe = on_subscribe
 client.on_publish = on_publish
 
