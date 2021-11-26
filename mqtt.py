@@ -26,6 +26,22 @@ serial_number_data_tx = {
 # subscribe topic to receive ACK
 serial_number_server_rx = "serial_number_server_rx"
 
+# message: technician request
+# source: hev 
+# subscriber: server
+# Posible options:
+    # SSR_FAULT
+    # DC_AC_FAULT
+# Response: ACK
+technician_request_hev_tx = "technician_request_hev_tx"
+technician_request_data_tx = {
+    "msg_code": 0x66,
+    "data": {
+        "reason": "ACK"
+    }
+}
+# publish to mqtt
+technician_request_server_rx = "technician_request_server_rx"
 
 
 
@@ -40,14 +56,19 @@ def on_message(client, obj, msg):
         print(f"topic: {msg.topic}, payload: {msg.payload}")
 
     elif topic == serial_number_hev_tx:
-        # print(f"topic: {msg.topic}, payload: {msg.payload}")
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
         # save data from serial number 
         # send ACK to HEV
         mqttc.publish(serial_number_server_rx, json.dumps(serial_number_data_tx))
-        m_decode=str(msg.payload.decode("utf-8","ignore"))
-        m_in = json.loads(m_decode)
-        print(m_in, topic)
-        print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+        # m_decode=str(msg.payload.decode("utf-8","ignore"))
+        # m_in = json.loads(m_decode)
+        # print(m_in, topic)
+        # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    elif topic == technician_request_hev_tx:
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
+        # save data from technician request
+        # send ACK to HEV
+        mqttc.publish(technician_request_server_rx, json.dumps(technician_request_data_tx))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
@@ -82,6 +103,7 @@ mqttc.connect(url.hostname, url.port)
 # mqttc.subscribe(credit_purchased, 0)
 mqttc.subscribe(credit_purchased_hev_rx, 0)
 mqttc.subscribe(serial_number_hev_tx, 0)
+mqttc.subscribe(technician_request_hev_tx, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
@@ -92,7 +114,6 @@ rc = 0
     # rc = mqttc.loop()
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
-    # mqttc.publish(topic_serial_number, json.dumps(serial_data))
     # mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))   # publish credit purchased
     time.sleep(10)
     print(f"rc: {rc}")
