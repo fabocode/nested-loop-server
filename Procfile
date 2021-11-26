@@ -1,1 +1,1 @@
-worker: python nested-loop-server/server/mqtt.py 
+worker: python project/server/mqtt.py 
