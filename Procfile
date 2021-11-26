@@ -1,1 +1,1 @@
-worker: cd server && python mqtt.py 
+worker: python mqtt.py
