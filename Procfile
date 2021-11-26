@@ -1,1 +1,1 @@
-worker: python project/server/mqtt.py 
+worker: cd server && python mqtt.py 
