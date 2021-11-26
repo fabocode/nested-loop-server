@@ -40,14 +40,14 @@ def on_message(client, obj, msg):
         print(f"topic: {msg.topic}, payload: {msg.payload}")
 
     elif topic == serial_number_hev_tx:
-        print(f"topic: {msg.topic}, payload: {msg.payload}")
+        # print(f"topic: {msg.topic}, payload: {msg.payload}")
         # save data from serial number 
         # send ACK to HEV
         mqttc.publish(serial_number_server_rx, json.dumps(serial_number_data_tx))
-    # m_decode=str(msg.payload.decode("utf-8","ignore"))
-    # m_in = json.loads(m_decode)
-    # print(m_in, topic)
-    # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+        m_decode=str(msg.payload.decode("utf-8","ignore"))
+        m_in = json.loads(m_decode)
+        print(m_in, topic)
+        print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
