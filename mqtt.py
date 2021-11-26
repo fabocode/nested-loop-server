@@ -1,6 +1,16 @@
 import paho.mqtt.client as mqtt
 import os, json, time 
 from urllib.parse import urlparse
+from mqtt_conf import MQTT_Config
+
+
+mqtt_data = MQTT_Config()
+
+
+# Client ID 
+client_id = "HEV123"
+# Server/backend/broker ID
+server_id = "SERVER321"
 
 ###########################################################
 # Notifications 
@@ -152,7 +162,7 @@ rc = 0
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
     # mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))   # publish credit purchased
-    time.sleep(10)
+    time.sleep(15)
     print(f"rc: {rc}")
     if rc != 0:
         break
