@@ -25,6 +25,14 @@ url = urlparse(url_str)
 # topic = url.path[1:] or 'test'
 
 # Connect
+
+print(url)
+print(f"host: {url.hostname}")
+print(f"port: {url.port}")
+print(f"username: {url.username}")
+print(f"password: {url.password}")
+print(f"path: {url.path}")
+print("")
 client.username_pw_set(url.username, url.password)
 client.connect(url.hostname, url.port)
 
