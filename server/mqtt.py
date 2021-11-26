@@ -18,7 +18,7 @@ def on_message(client, userdata, message):
 
 broker_address = 'localhost'
 
-client = mqtt.Client("server", protocol=mqtt.MQTTv5)
+# client = mqtt.Client("server", protocol=mqtt.MQTTv5)
 
 url_str = os.environ.get('CLOUDMQTT_URL', 'mqtt://localhost:18577')
 url = urlparse(url_str)
