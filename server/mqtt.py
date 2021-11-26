@@ -45,5 +45,15 @@ print("connected and waiting request")
 # client.loop_start()
 # time.sleep(10)  # wait
 # client.loop_stop()  # stop the loop
-client.loop_forever()
+# client.loop_forever()
+# client.disconnect()
+while True:
+    rc = client.loop()
+    # client.publish('common', "client message", 1, properties=publish_properties)
+    print (f"request sent from client {rc}")
+    time.sleep(10)
+    print(f"rc: {rc}")
+    if rc != 0:
+        print("Error: {}".format(rc))
+        break
 client.disconnect()
