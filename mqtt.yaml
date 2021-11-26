@@ -31,7 +31,7 @@ codes:
   # notifications 
   credit_purchased:     0x64
   serial_number:        0x65
-  techinician_request:  0x66
+  technician_request:  0x66
   thermal_shutdown:     0x67
   alert_level:          0x68
   sleep_mode:           0x69
