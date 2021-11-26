@@ -25,7 +25,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, obj, msg):
     topic=msg.topic
     if topic == credit_purchased_hev_rx:
-        print("credit purchased OK!")
+        print("credit purchased OKky!!")
         print(msg.topic, msg.payload)
     # m_decode=str(msg.payload.decode("utf-8","ignore"))
     # m_in = json.loads(m_decode)
