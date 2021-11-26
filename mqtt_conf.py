@@ -14,7 +14,7 @@ class MQTT_Config:
         self.password = self.url.password
         
         # Load the config file (yaml file)
-        with open('mqtt_conf.yaml') as file:
+        with open('mqtt.yaml') as file:
             self.config = yaml.load(file, Loader=yaml.FullLoader)
             
             # ID of the device
