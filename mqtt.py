@@ -58,6 +58,16 @@ thermical_shutdown_data_tx = {
 # publish to mqtt
 thermical_shutdown_server_rx = "thermical_shutdown_server_rx"
 
+# message: alert level
+# source: hev
+# subscriber: server
+alert_level_hev_tx = "alert_level_hev_tx"
+alert_level_data_tx = {
+    "msg_code": 0x68,
+    "data": "ACK"
+}
+# publish to mqtt
+alert_level_server_rx = "alert_level_server_rx"
 
 
 # Define event callbacks
@@ -90,6 +100,12 @@ def on_message(client, obj, msg):
         # save data from technician request
         # send ACK to HEV
         mqttc.publish(thermical_shutdown_server_rx, json.dumps(thermical_shutdown_data_tx))
+
+    elif topic == alert_level_hev_tx:
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
+        # save data from technician request
+        # send ACK to HEV
+        mqttc.publish(alert_level_server_rx, json.dumps(alert_level_data_tx))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
@@ -126,6 +142,7 @@ mqttc.subscribe(serial_number_hev_tx, 0)
 mqttc.subscribe(technician_request_hev_tx, 0)
 mqttc.subscribe(credit_purchased_server_tx, 0)
 mqttc.subscribe(thermical_shutdown_hev_tx, 0)
+mqttc.subscribe(alert_level_hev_tx, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
