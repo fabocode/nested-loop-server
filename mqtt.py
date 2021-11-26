@@ -26,7 +26,7 @@ def on_message(client, obj, msg):
     topic=msg.topic
     if topic == credit_purchased_hev_rx:
         print("credit purchased OKky!!")
-        print(msg.topic, msg.payload)
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
     # m_decode=str(msg.payload.decode("utf-8","ignore"))
     # m_in = json.loads(m_decode)
     # print(m_in, topic)
