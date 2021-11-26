@@ -15,6 +15,17 @@ credit_purchased_data_tx = {
 # subscribe topic to receive ACK
 credit_purchased_hev_rx = "credit_purchased_hev_rx"
 
+# message: serial number 
+# source: hev 
+# publish 
+serial_number_hev_tx = "serial_number_hev_tx"
+serial_number_data_tx = {
+    "msg_code": 0x65,
+    "data": "ACK"
+}
+# subscribe topic to receive ACK
+serial_number_server_rx = "serial_number_server_rx"
+
 
 
 
@@ -25,8 +36,14 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, obj, msg):
     topic=msg.topic
     if topic == credit_purchased_hev_rx:
-        print("credit purchased OKky!!")
+        # ACK received from HEV
         print(f"topic: {msg.topic}, payload: {msg.payload}")
+
+    elif topic == serial_number_hev_tx:
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
+        # save data from serial number 
+        # send ACK to HEV
+        mqttc.publish(serial_number_server_rx, json.dumps(serial_number_data_tx))
     # m_decode=str(msg.payload.decode("utf-8","ignore"))
     # m_in = json.loads(m_decode)
     # print(m_in, topic)
@@ -75,7 +92,7 @@ rc = 0
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
     # mqttc.publish(topic_serial_number, json.dumps(serial_data))
-    mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))
+    # mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))   # publish credit purchased
     time.sleep(10)
     print(f"rc: {rc}")
     if rc != 0:
