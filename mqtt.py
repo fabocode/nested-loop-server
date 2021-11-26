@@ -2,12 +2,20 @@ import paho.mqtt.client as mqtt
 import os, json, time 
 from urllib.parse import urlparse
 
+###########################################################
+# Notifications 
+# message: credit purchased
+# source: server 
+# publish 
 credit_purchased_server_tx = "credit_purchased_srvr_tx"
 credit_purchased_data_tx = {
     "msg_code": 0x64,
     "data": 40320
 }
+# subscribe topic to receive ACK
 credit_purchased_hev_rx = "credit_purchased_hev_rx"
+
+
 
 
 # Define event callbacks
@@ -18,10 +26,11 @@ def on_message(client, obj, msg):
     topic=msg.topic
     if topic == credit_purchased_hev_rx:
         print("credit purchased OK!")
+        print(msg.topic, msg.payload)
     # m_decode=str(msg.payload.decode("utf-8","ignore"))
     # m_in = json.loads(m_decode)
     # print(m_in, topic)
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+    # print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
