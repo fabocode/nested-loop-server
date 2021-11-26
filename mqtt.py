@@ -43,6 +43,21 @@ technician_request_data_tx = {
 # publish to mqtt
 technician_request_server_rx = "technician_request_server_rx"
 
+# message: thermical shutdown 
+# source: hev 
+# subscriber: server
+# Posible options:
+    # SSR_FAULT
+    # DC_AC_FAULT
+# Response: ACK
+thermical_shutdown_hev_tx = "thermical_shutdown_hev_tx"
+technician_request_data_tx = {
+    "msg_code": 0x67,
+    "data": "30°C"
+}
+# publish to mqtt
+technician_request_server_rx = "technician_request_server_rx"
+
 
 
 # Define event callbacks
@@ -100,18 +115,16 @@ mqttc.connect(url.hostname, url.port)
 
 
 # Start subscribe, with QoS level 0
-# mqttc.subscribe(credit_purchased, 0)
 mqttc.subscribe(credit_purchased_hev_rx, 0)
 mqttc.subscribe(serial_number_hev_tx, 0)
 mqttc.subscribe(technician_request_hev_tx, 0)
+mqttc.subscribe(credit_purchased_server_tx, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
 
 # Continue the network loop, exit when an error occurs
 rc = 0
-# while rc == 0:
-    # rc = mqttc.loop()
 while True:
     rc = mqttc.loop()   # keep network traffic flow with the broker
     # mqttc.publish(credit_purchased_server_tx, json.dumps(credit_purchased_data_tx))   # publish credit purchased
