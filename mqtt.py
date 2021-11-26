@@ -51,12 +51,12 @@ technician_request_server_rx = "technician_request_server_rx"
     # DC_AC_FAULT
 # Response: ACK
 thermical_shutdown_hev_tx = "thermical_shutdown_hev_tx"
-technician_request_data_tx = {
+thermical_shutdown_data_tx = {
     "msg_code": 0x67,
-    "data": "30°C"
+    "data": "ACK",
 }
 # publish to mqtt
-technician_request_server_rx = "technician_request_server_rx"
+thermical_shutdown_server_rx = "thermical_shutdown_server_rx"
 
 
 
@@ -84,6 +84,12 @@ def on_message(client, obj, msg):
         # save data from technician request
         # send ACK to HEV
         mqttc.publish(technician_request_server_rx, json.dumps(technician_request_data_tx))
+    
+    elif topic == thermical_shutdown_hev_tx:
+        print(f"topic: {msg.topic}, payload: {msg.payload}")
+        # save data from technician request
+        # send ACK to HEV
+        mqttc.publish(thermical_shutdown_server_rx, json.dumps(thermical_shutdown_data_tx))
 
 def on_publish(client, obj, mid):
     print(f"published: {mid}")
@@ -119,6 +125,7 @@ mqttc.subscribe(credit_purchased_hev_rx, 0)
 mqttc.subscribe(serial_number_hev_tx, 0)
 mqttc.subscribe(technician_request_hev_tx, 0)
 mqttc.subscribe(credit_purchased_server_tx, 0)
+mqttc.subscribe(thermical_shutdown_hev_tx, 0)
 
 # Publish a message
 # mqttc.publish(topic, "my message")
