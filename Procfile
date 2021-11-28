@@ -1,1 +1,1 @@
-worker: python mqtt.py
+worker: python server.py
