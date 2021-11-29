@@ -1,1 +1,1 @@
-worker: cd webserver && python server.py
+worker: cd webserver && python server_mqtt.py
