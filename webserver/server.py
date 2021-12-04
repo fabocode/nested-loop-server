@@ -13,13 +13,14 @@ notifications = Notifications(hev_ip_address)
 # messages
 class Credit_Purchased(Resource):
     
-    def post(self):
+    def post(self, serial_number):
         url = hev_ip_address + request.path
+        print(url)
         data = request.get_json()
         data = json.dumps(data)
         response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
         if response.status_code == 201:
-            return response.json()
+            return response.json(), 201
         else:
             return response.text
 
@@ -123,18 +124,11 @@ class Access_Granted(Resource):
 def index():
     return "hello world from server"
 
-# @app.route('/hev/<int:id>/credits/credit_purchased', methods=['POST'])
-# def credit_purchased(id):
-#     if request.method == 'POST':
-#         data = request.get_json()
-#         response = notifications.credit_purchased(id, data)
-#         return response, 201
-#     else:        
-#         return "error", 400
 
-# api.add_resource(Credits,               '/hev/<int:id>/credits')       
+
+
 # messages from server to hev
-api.add_resource(Credit_Purchased,      '/notification/hev/<int:id>/credits/credit_purchased')       
+api.add_resource(Credit_Purchased,      '/notification/hev/<int:serial_number>/credits/credit_purchased')       
 api.add_resource(Hev_Data,              '/message/hev/<int:id>/hev_data')
 # notifications from hev to server
 api.add_resource(Serial_Number,         '/notification/server/serial_number')       # from HEV to server
