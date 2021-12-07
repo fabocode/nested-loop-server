@@ -7,7 +7,7 @@ import json
 app = Flask(__name__)
 api = Api(app)
 
-hev_ip_address = 'http://192.168.1.3:5000'  # provisional ip address to communicate between servers (pi and server)
+hev_ip_address = 'http://192.168.1.7:5000'  # provisional ip address to communicate between servers (pi and server)
 notifications = Notifications(hev_ip_address)   
 
 # messages
@@ -37,6 +37,46 @@ class Hev_Data(Resource):
         response = requests.get(url)
         print(f"response: {response.json()}")
         return response.json()
+
+class Block_Technician(Resource):
+
+    def post(self, serial_number):
+        url = hev_ip_address + request.path
+        print(url)
+        data = request.get_json()
+        data = json.dumps(data)
+        print(data)
+        response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        if response.status_code == 201:
+            return response.json(), 201
+        else:
+            return response.text
+
+class HEV_Shutdown(Resource):
+
+    def post(self, serial_number):
+        url = hev_ip_address + request.path
+        data = request.get_json()
+        data = json.dumps(data)
+        print("data shutdown: ", data)
+        response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        if response.status_code == 201:
+            return response.json(), 201
+        else:
+            return response.text
+
+class HEV_Resume(Resource):
+
+    def post(self, serial_number):
+        url = hev_ip_address + request.path
+        data = request.get_json()
+        data = json.dumps(data)
+        print("data shutdown: ", data)
+        response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        if response.status_code == 201:
+            return response.json(), 201
+        else:
+            return response.text
 
 # notifications 
 class Serial_Number(Resource):
@@ -128,18 +168,21 @@ def index():
 
 
 # messages from server to hev
-api.add_resource(Credit_Purchased,      '/notification/hev/<int:serial_number>/credits/credit_purchased')       
-api.add_resource(Hev_Data,              '/message/hev/<int:id>/hev_data')
-# notifications from hev to server
-api.add_resource(Serial_Number,         '/notification/server/serial_number')       # from HEV to server
-api.add_resource(Technician_Request,    '/notification/server/technician_request')  
-api.add_resource(Thermal_Shutdown,      '/notification/server/thermal_shutdown')
-api.add_resource(Alert_Level,           '/notification/server/alert_level')
-api.add_resource(Sleep_Mode,            '/notification/server/sleep_mode')
-api.add_resource(Critical_Alert,        '/notification/server/critical_alert')
-api.add_resource(Credit_Low,            '/notification/server/credit_low')
-api.add_resource(Fire_Alert,            '/notification/server/fire_alert')
-api.add_resource(Access_Granted,        '/notification/server/access_granted')
+api.add_resource(Credit_Purchased,      '/api/notification/hev/<int:serial_number>/credits/credit_purchased')       
+api.add_resource(Hev_Data,              '/api/message/hev/<int:id>/hev_data')
+api.add_resource(Block_Technician,      '/api/message/hev/<int:serial_number>/block_technician')
+# message from server to HEV
+api.add_resource(Serial_Number,         '/api/notification/server/serial_number')       # from server to HEV
+api.add_resource(HEV_Shutdown,          '/api/message/hev/<int:serial_number>/shutdown')        # from server to HEV
+api.add_resource(HEV_Resume,          '/api/message/hev/<int:serial_number>/resume')        # from server to HEV
+api.add_resource(Technician_Request,    '/api/notification/server/technician_request')  
+api.add_resource(Thermal_Shutdown,      '/api/notification/server/thermal_shutdown')
+api.add_resource(Alert_Level,           '/api/notification/server/alert_level')
+api.add_resource(Sleep_Mode,            '/api/notification/server/sleep_mode')
+api.add_resource(Critical_Alert,        '/api/notification/server/critical_alert')
+api.add_resource(Credit_Low,            '/api/notification/server/credit_low')
+api.add_resource(Fire_Alert,            '/api/notification/server/fire_alert')
+api.add_resource(Access_Granted,        '/api/notification/server/access_granted')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
