@@ -16,6 +16,7 @@ class Credit_Purchased(Resource):
     def post(self, serial_number):
         url = hev_ip_address + request.path
         print(url)
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         data = request.get_json()
         data = json.dumps(data)
         response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
@@ -34,19 +35,23 @@ class Hev_Data(Resource):
 
     def get(self, id):
         url = hev_ip_address + request.path
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         response = requests.get(url)
+        print(f"response in bytes: {len(response.content)}")
         print(f"response: {response.json()}")
         return response.json()
 
 class Block_Technician(Resource):
 
     def post(self, serial_number):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         url = hev_ip_address + request.path
         print(url)
         data = request.get_json()
         data = json.dumps(data)
         print(data)
         response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        print(f"response in bytes: {len(response.content)}")
         if response.status_code == 201:
             return response.json(), 201
         else:
@@ -55,11 +60,13 @@ class Block_Technician(Resource):
 class HEV_Shutdown(Resource):
 
     def post(self, serial_number):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         url = hev_ip_address + request.path
         data = request.get_json()
         data = json.dumps(data)
         print("data shutdown: ", data)
         response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        print(f"response in bytes: {len(response.content)}")
         if response.status_code == 201:
             return response.json(), 201
         else:
@@ -68,11 +75,13 @@ class HEV_Shutdown(Resource):
 class HEV_Resume(Resource):
 
     def post(self, serial_number):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         url = hev_ip_address + request.path
         data = request.get_json()
         data = json.dumps(data)
         print("data shutdown: ", data)
         response = requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+        print(f"response in bytes: {len(response.content)}")
         if response.status_code == 201:
             return response.json(), 201
         else:
@@ -82,6 +91,7 @@ class HEV_Resume(Resource):
 class Serial_Number(Resource):
     
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x65:
             return {'Server response': 'ACK'}, 201  
@@ -90,6 +100,7 @@ class Serial_Number(Resource):
 
 class Technician_Request(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x66:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -99,6 +110,7 @@ class Technician_Request(Resource):
 
 class Thermal_Shutdown(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x67:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -108,6 +120,7 @@ class Thermal_Shutdown(Resource):
 
 class Alert_Level(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x68:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -117,6 +130,7 @@ class Alert_Level(Resource):
 
 class Sleep_Mode(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x69:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -126,6 +140,7 @@ class Sleep_Mode(Resource):
 
 class Critical_Alert(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x6A:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -135,6 +150,7 @@ class Critical_Alert(Resource):
 
 class Credit_Low(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x6B:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -144,6 +160,7 @@ class Credit_Low(Resource):
 
 class Fire_Alert(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x6C:
             print(f"{json_data['msg_code']} - {json_data['data']}")
@@ -153,12 +170,14 @@ class Fire_Alert(Resource):
 
 class Access_Granted(Resource):
     def post(self):
+        print(f"bytes in requests: {request.headers['Content-Length']}")
         json_data = request.get_json()
         if json_data['msg_code'] == 0x6D:
             print(f"{json_data['msg_code']} - {json_data['data']}")
             return {'Server response': 'ACK'}, 201  
         else:
             return {'Server response': 'NACK - invalid msg code'}, 201
+
 
 @app.route('/')
 def index():
