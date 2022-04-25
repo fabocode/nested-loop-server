@@ -3,6 +3,10 @@ from awsiot import mqtt_connection_builder
 from uuid import uuid4
 import json
 import threading
+import os 
+# import consts file 
+from consts.consts import *
+import time 
 
 '''
 usage: https_sample.py [-h] --endpoint ENDPOINT --cert CERT --key KEY --topic TOPIC
@@ -11,11 +15,10 @@ usage: https_sample.py [-h] --endpoint ENDPOINT --cert CERT --key KEY --topic TO
 
 class MQTT_Server:
 
-    def __init__(self, endpoint, cert, key, topic):
+    def __init__(self, endpoint, cert, key):
         self.endpoint = endpoint
         self.cert = cert
         self.key = key
-        self.topic = topic
         self.proxy_options = None
         self.client_id = "test-" + str(uuid4())
         received_count = 0
@@ -28,7 +31,7 @@ class MQTT_Server:
             endpoint=self.endpoint,
             cert_filepath=self.cert,
             pri_key_filepath=self.key,
-            ca_filepath=self.ca_file,
+            # ca_filepath=self.ca_file,
             on_connection_interrupted=self.on_connection_interrupted,
             on_connection_resumed=self.on_connection_resumed,
             client_id=self.client_id,
@@ -55,6 +58,12 @@ class MQTT_Server:
         subscribe_future, packed_id = self.mqtt_connection.subscribe(topic, qos=mqtt.QoS.AT_LEAST_ONCE, callback=self.on_message_received)
         subscribe_result = subscribe_future.result()
         print("Subscribed with {}".format(str(subscribe_result['qos'])))
+
+    def publish(self, topic, msg):
+        print("Publishing message to topic '{}': {}".format(topic, msg))
+        msg_json = json.dumps(msg)
+        publish_future, _ = self.mqtt_connection.publish(topic=topic, payload=msg_json, qos=mqtt.QoS.AT_LEAST_ONCE)
+        publish_future.result()
         
 
     # Callback when connection is accidentally lost.
@@ -88,6 +97,20 @@ class MQTT_Server:
     def on_message_received(self, topic, payload, dup, qos, retain, **kwargs):
         print("Received message from topic '{}': {}".format(topic, payload))
         global received_count
-        received_count += 1
-        if received_count == args.count:
-            self.received_all_event.set()
+        # received_count += 1
+        # if received_count == args.count:
+        #     self.received_all_event.set()
+
+if __name__ == '__main__':
+    endpoint = 'a3l5yhhukwsumo-ats.iot.us-east-1.amazonaws.com'
+    dirname  = os.path.dirname(__file__)
+    cert     = os.path.join(dirname, 'certs/certificate.pem.crt')
+    key      = os.path.join(dirname, 'certs/private.pem.key')
+    mqt     = MQTT_Server(endpoint=endpoint, cert=cert, key=key)
+    mqt.connect()  # connected
+    # mqt.publish(PUB_CREDIT_PURCHASED, )
+    mqt.subscribe(RES_CREDIT_PURCHASED)
+    while True:
+        pass
+        time.sleep(1)
+
