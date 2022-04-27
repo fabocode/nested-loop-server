@@ -102,7 +102,7 @@ class MQTT_Server:
         #     self.received_all_event.set()
 
 if __name__ == '__main__':
-    endpoint = 'a3l5yhhukwsumo-ats.iot.us-east-1.amazonaws.com'
+    endpoint = '***'
     dirname  = os.path.dirname(__file__)
     cert     = os.path.join(dirname, 'certs/certificate.pem.crt')
     key      = os.path.join(dirname, 'certs/private.pem.key')
